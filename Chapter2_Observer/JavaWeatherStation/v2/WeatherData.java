@@ -1,32 +1,17 @@
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class WeatherData implements Subject {
+public class WeatherData extends Observable {
 
-  private ArrayList observers;
   private float temperature;
   private float humidity;
   private float pressure;
 
-  public WeatherData() {
-    observers = new ArrayList();
-  }
-
-  public void registerObserver(Observer o) {
-    observers.add(o);
-  }
-
-  public void removeObserver(Observer o) {
-    observers.remove(o);
-  }
-
-  public void notifyObservers() {
-    for (Object o : observers) {
-      Observer observer = (Observer) o;
-      observer.update(temperature, humidity, pressure);
-    }
-  }
+  public WeatherData() {}
 
   public void measurementsChanged() {
+    setChanged();
     notifyObservers();
   }
 
@@ -41,6 +26,8 @@ public class WeatherData implements Subject {
     measurementsChanged();
   }
   // TODO(steeve): Implement a setMeasuremements that pulls 3 vals from the web
-
+ public float getTemperature() {return temperature;}
+ public float getHumidity() {return humidity;}
+ public float getPressure() {return pressure;}
   // other WeatherData methods
 }

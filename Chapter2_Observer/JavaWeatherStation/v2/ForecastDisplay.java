@@ -1,23 +1,23 @@
+import java.util.Observer;
+import java.util.Observable;
 public class ForecastDisplay implements DisplayElement, Observer {
 
   private float lastPressure;
-  private float currentPressure;
-  // Technically this could be `WeatherData weatherData`,
-  // but having the type be subject
-  //   a. helps to solidify observer pattern and
-  //   b. if this display wanted to observe a different dataSource, that would be easy to swap (loosely coupled)
-  private Subject weatherData;
+  private float currentPressure = 29.92f;
+  private Observable observable;
 
-  public ForecastDisplay(Subject weatherData) {
-    this.weatherData = weatherData;
-    weatherData.registerObserver(this);
+  public ForecastDisplay(Observable observable) {
+    this.observable = observable;
+    observable.addObserver(this);
   }
 
-  public void update(float temp, float humidity, float pressure) {
-    lastPressure = currentPressure;
-    currentPressure = pressure;
-
-    display();
+  public void update(Observable observable, Object arg) {
+    if (observable instanceof WeatherData) {
+      WeatherData weatherData = (WeatherData) observable;
+      lastPressure = currentPressure;
+      currentPressure = weatherData.getPressure();
+      display();
+    }
   }
 
   public void display() {
